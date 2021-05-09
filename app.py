@@ -18,6 +18,8 @@ class Todo(db.Model):
 def index():
     if request.method == "POST":
         task_content = request.form['content']
+        if task_content == '':
+            return redirect('/')   #'Please add some do-able task!'
         new_task = Todo(content=task_content)
 
         try:
