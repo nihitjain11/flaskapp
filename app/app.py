@@ -3,13 +3,17 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 
+DB_ENGINE=os.getenv('DB_ENGINE')
 DB_USER=os.getenv('DB_USER')
 DB_PASSWORD=os.getenv('DB_PASSWORD')
 DB_ENDPOINT=os.getenv('DB_ENDPOINT')
 DB_NAME=os.getenv('DB_NAME')
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_ENDPOINT}/{DB_NAME}' #'sqlite:///test.db'
+if DB_ENGINE == 'sqlite':
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+if DB_ENGINE == 'mysql+pymysql':
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_ENDPOINT}/{DB_NAME}'
 db = SQLAlchemy(app)
 
 class Todo(db.Model):

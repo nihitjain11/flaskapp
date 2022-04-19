@@ -15,6 +15,7 @@ services:
       - db
     restart: always
     environment:
+      DB_ENGINE: 'mysql+pymysql'
       DB_USER: master
       DB_PASSWORD: password
       DB_ENDPOINT: db
