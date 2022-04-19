@@ -1,9 +1,15 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import os
+
+DB_USER=os.getenv('DB_USER')
+DB_PASSWORD=os.getenv('DB_PASSWORD')
+DB_ENDPOINT=os.getenv('DB_ENDPOINT')
+DB_NAME=os.getenv('DB_NAME')
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_ENDPOINT}/{DB_NAME}' #'sqlite:///test.db'
 db = SQLAlchemy(app)
 
 class Todo(db.Model):
@@ -26,8 +32,8 @@ def index():
             db.session.add(new_task)
             db.session.commit()
             return redirect('/')
-        except:
-            return 'There was an issue adding your task'
+        except Exception as e:
+            return f'There was an issue adding your task\n{e}'
     else:
         tasks = Todo.query.order_by(Todo.date_created).all()
         return render_template('index.html', tasks=tasks)
